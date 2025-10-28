@@ -2,17 +2,9 @@
   "name": "btch-http",
   "version": "1.0.10",
   "description": "Custom HTTP client using Node.js https module",
-  "keywords": [
-    "http",
-    "https",
-    "client",
-    "typescript",
-    "api"
-  ],
+  "keywords": ["http", "https", "client", "typescript", "api"],
   "homepage": "https://github.com/hostinger-bot/btch-http#readme",
-  "bugs": {
-    "url": "https://github.com/hostinger-bot/btch-http/issues"
-  },
+  "bugs": { "url": "https://github.com/hostinger-bot/btch-http/issues" },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hostinger-bot/btch-http.git"
@@ -22,23 +14,21 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
     "dev": "tsc --watch",
     "test": "npx ts-node test/Test.ts",
-    "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
     "postinstall": "npm run build"
   },
   "dependencies": {
-    "undici-types": "^7.16.0"
+    "undici-types": "^7.16.0",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
-    "typescript": "^5.9.3",
     "ts-node": "^10.9.2"
   },
   "engines": {
