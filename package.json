@@ -1,6 +1,6 @@
 {
   "name": "btch-http",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0",
   "description": "Custom HTTP client using Node.js https module",
   "keywords": ["http", "https", "client", "typescript", "api"],
   "homepage": "https://github.com/hostinger-bot/btch-http#readme",
