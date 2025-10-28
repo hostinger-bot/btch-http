@@ -1,6 +1,6 @@
 {
   "name": "btch-http",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Custom HTTP client using Node.js https module",
   "files": [
     "dist"
