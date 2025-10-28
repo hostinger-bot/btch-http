@@ -29,7 +29,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "test": "npx ts-node test/Test.ts",
     "dev": "tsc --watch",
     "postinstall": "npm run build"
