@@ -32,7 +32,8 @@
     "build": "tsc",
     "test": "npx ts-node test/Test.ts",
     "dev": "tsc --watch",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "undici-types": "^7.16.0"
