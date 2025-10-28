@@ -172,15 +172,6 @@ console.log('Download URL:', data.video);
 
 ---
 
-## Development
-
-```bash
-npm run build   # compile to dist/
-npm run test    # run test/test.ts
-```
-
----
-
 ## License
 
 MIT
