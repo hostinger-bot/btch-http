@@ -1,6 +1,6 @@
 {
   "name": "btch-http",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Custom HTTP client using Node.js https module",
   "files": [
     "dist"
@@ -22,12 +22,12 @@
   },
   "license": "MIT",
   "author": "Tio",
-  "type": "commonjs",
   "main": "dist/index.js",
+  "type": "commonjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "ts-node test/Test.ts",
+    "test": "npx ts-node test/Test.ts",
     "dev": "tsc --watch",
     "postinstall": "npm run build"
   },
