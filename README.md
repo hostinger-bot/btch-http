@@ -1,105 +1,185 @@
-# Custom HTTP Client
+# btch-http
 
-A TypeScript HTTP client built on Node.js's native `https` module. Provides both a lightweight function for quick GET requests (`HttpGet`) and a full-featured `HttpClient` class for structured GET and POST operations with advanced features including custom headers, timeout handling, and type safety.
+A lightweight, type-safe HTTP client built on Node.js `https` module.  
+Includes a quick `HttpGet` function and a full-featured `HttpClient` class with GET/POST, timeout, headers, and error handling.
+
+---
 
 ## Features
 
-- **HttpGet Function**  
-  - Perform quick GET requests to any endpoint.  
-  - Accepts parameters for API endpoint, URL, client version, timeout, and base URL.  
-  - Automatically parses JSON responses.  
-  - Throws errors for HTTP failures or invalid responses.
+- **Zero dependencies** – uses only Node.js `https`
+- **TypeScript-first** – full type safety
+- **HttpGet** – one-liner GET with URL encoding
+- **HttpClient** – reusable client with config, headers, query params, POST
+- **Smart error handling** – `HttpError` with status & response
+- **Timeout support** – automatic cleanup on timeout
 
-- **HttpClient Class**  
-  - Professional HTTP client with GET and POST methods.  
-  - Supports query parameters and custom headers.  
-  - Configurable base URL, client version, timeout, and default headers.  
-  - Automatic JSON response parsing.  
-  - Comprehensive error handling using `HttpError`.  
-  - Handles network errors, HTTP errors, and request timeouts gracefully.
+---
 
-- **Type Safety**  
-  - TypeScript interfaces for request and response objects.  
-  - Structured response types: `HttpResponse<T>` and `CustomResponse<T>`.  
-  - Strongly typed error handling with `HttpError`.
+## Installation
 
+Using npm:
+
+```bash
+npm install btch-http
+```
+
+Using yarn:
+
+```bash
+yarn add btch-http
+```
+
+Using pnpm:
+
+```bash
+pnpm add btch-http
+```
+
+Using bun:
+
+```bash
+bun add btch-http
+```
+
+---
 
 ## Usage
 
+### 1. Quick GET with `HttpGet`
+
 ```ts
-import { HttpClient, HttpGet } from 'btch-http';
+import { HttpGet } from 'btch-http';
 
-const baseUrl = 'https://api.example.com';
-const client = new HttpClient({ baseUrl, version: '1.0.0' });
+const result = await HttpGet<any>(
+  'ttdl',                                          // endpoint
+  'https://tiktok.com/@user/video/123',            // url to scrape
+  '1.0.0',                                         // client version
+  30000,                                           // timeout (ms)
+  'https://backend1.tioo.eu.org'                   // base URL
+);
 
-// GET request with query parameters
-const response = await client.get('endpoint', { param: 'value' });
-console.log(response.data);
-
-// POST request with JSON body
-const postResponse = await client.post('endpoint', { key: 'value' });
-console.log(postResponse.data);
-
-// Quick GET using HttpGet
-const data = await HttpGet('endpoint', 'https://example.com', '1.0.0', 60000, baseUrl);
-console.log(data);
+console.log(result);
 ```
 
-## Configuration Interfaces
+> Automatically appends `?url=...` and sets proper headers.
 
-* **HttpClientConfig**
+---
 
-  ```ts
-  interface HttpClientConfig {
-    baseUrl: string;
-    version: string;
-    timeout?: number;
-    defaultHeaders?: Record<string, string>;
-  }
-  ```
+### 2. Full Client with `HttpClient`
 
-* **HttpResponse<T>**
+```ts
+import { HttpClient } from 'btch-http';
 
-  ```ts
-  interface HttpResponse<T> {
-    status: number;
-    statusText: string;
-    data: T;
-    headers: Record<string, string>;
-  }
-  ```
+const client = new HttpClient({
+  baseUrl: 'https://api.example.com',
+  version: '2.0.0',
+  timeout: 10000,
+});
 
-* **HttpError**
+// GET with query params
+const res1 = await client.get<{ id: number }>('users', { active: '1' });
+console.log(res1.data);
 
-  ```ts
-  class HttpError extends Error {
-    status: number;
-    response?: HttpResponse<unknown>;
-  }
-  ```
+// POST with JSON body
+const res2 = await client.post<{ success: boolean }>('login', {
+  username: 'john',
+  password: 'secret'
+});
+console.log(res2.status, res2.data);
 
-* **CustomResponse<T>**
+// POST with custom headers
+const res3 = await client.post('upload', { file: '...' }, {
+  Authorization: 'Bearer xyz'
+});
+```
 
-  ```ts
-  interface CustomResponse<T> {
-    status: number;
-    statusText: string;
-    data: T;
-  }
-  ```
+---
+
+## Configuration
+
+```ts
+interface HttpClientConfig {
+  baseUrl: string;
+  version: string;
+  timeout?: number;           // default: 60000
+  defaultHeaders?: Record<string, string>;
+}
+```
+
+---
+
+## Response Format
+
+```ts
+interface HttpResponse<T> {
+  status: number;
+  statusText: string;
+  data: T | null;
+  headers: Record<string, string>;
+}
+```
+
+---
 
 ## Error Handling
 
-* `HttpError` is thrown for any HTTP status outside 200–299.
-* Network errors and timeouts are automatically caught and wrapped into `HttpError`.
-* All methods ensure JSON parsing errors are handled gracefully.
+```ts
+try {
+  await client.get('not-found');
+} catch (error) {
+  if (error instanceof HttpError) {
+    console.log(error.status);      // e.g. 404
+    console.log(error.message);     // e.g. "Not Found"
+    console.log(error.response?.data);
+  }
+}
+```
 
-## Example Workflow
+> `HttpError` is thrown for:
+> - HTTP status ≥ 300
+> - Network errors
+> - Timeouts
+> - JSON parse failures
 
-1. Create an `HttpClient` instance with a base URL and version.
-2. Perform GET requests with optional query parameters and custom headers.
-3. Perform POST requests with JSON body data.
-4. Catch `HttpError` for any failed requests and handle accordingly.
+---
+
+## Exports
+
+```ts
+export { HttpGet, HttpClient, HttpError };
+export type { HttpClientConfig, HttpResponse };
+```
+
+---
+
+## Example: TikTok Downloader
+
+```ts
+import { HttpGet } from 'btch-http';
+
+const url = 'https://www.tiktok.com/@omagadsus/video/7025456384175017243';
+const data = await HttpGet(
+  'ttdl',
+  url,
+  '1.0.0',
+  30000,
+  'https://backend1.tioo.eu.org'
+);
+
+console.log('Download URL:', data.video);
+```
+
+---
+
+## Development
+
+```bash
+npm run build   # compile to dist/
+npm run test    # run test/test.ts
+```
+
+---
 
 ## License
 
