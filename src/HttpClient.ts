@@ -1,7 +1,7 @@
 "use strict";
 import { request } from 'node:https';
 import { URL } from 'node:url';
-import { 
+import type { 
   CustomResponse,
   HttpClientConfig,
   HttpResponse 
