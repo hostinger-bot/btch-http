@@ -7,7 +7,7 @@ import { HttpGet } from '../dist/index';
   const endpoint = 'ttdl';
   const baseUrl = 'https://backend1.tioo.eu.org';
   const version = '1.0.0';
-  const timeout = 30000;
+  const timeout = 60000;
 
   try {
     const result = await HttpGet<any>(

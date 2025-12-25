@@ -50,7 +50,7 @@ async function HttpGet<T>(endpoint: string, url: string, version: string, timeou
                             throw new Error(`${res.statusCode} ${res.statusMessage || 'Unknown'}`);
                         }
 
-                        const parsedData: T = JSON.parse(data);
+                        const parsedData: T = JSON.parse(data) as T;
                         resolve(parsedData);
                     } catch (error) {
                         reject(new Error(error instanceof Error ? error.message : 'Unknown error occurred'));
@@ -149,7 +149,7 @@ class HttpClient {
                             const response: HttpResponse<T> = {
                                 status: res.statusCode,
                                 statusText: res.statusMessage || 'Unknown',
-                                data: responseData ? JSON.parse(responseData) : null,
+                                data: responseData ? (JSON.parse(responseData) as T) : null,
                                 headers: responseHeaders
                             };
 
@@ -222,7 +222,7 @@ class HttpClient {
                             const response: HttpResponse<T> = {
                                 status: res.statusCode,
                                 statusText: res.statusMessage || 'Unknown',
-                                data: responseData ? JSON.parse(responseData) : null,
+                                data: responseData ? (JSON.parse(responseData) as T) : null,
                                 headers: responseHeaders
                             };
 

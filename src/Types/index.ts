@@ -1,7 +1,7 @@
 export interface CustomResponse<T> {
     status: number;
     statusText: string;
-    data: T;
+    data: T | null;
 }
 
 export interface HttpClientConfig {
@@ -14,6 +14,6 @@ export interface HttpClientConfig {
 export interface HttpResponse<T> {
     status: number;
     statusText: string;
-    data: T;
+    data: T | null;
     headers: Record<string, string>;
 }
